@@ -1,7 +1,8 @@
-import mongoose from'mongoose';
-import config from 'config';
+const mongoose = require('mongoose');
+const config = require('config');
 const db = config.get('mongoURI');
 
+const connect = mongoose.createConnection(db, { useNewUrlParser: true, useUnifiedTopology: true });
 const connectDB = async () => {
     
 
@@ -18,5 +19,7 @@ const connectDB = async () => {
     }
 };
 
-export default connectDB
-    
+module.exports = {
+    connectDB:connectDB,
+    connect:connect,
+};

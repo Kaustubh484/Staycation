@@ -1,25 +1,14 @@
-import express from'express';
-import { createHotel, updateHotel, getAllHotels, getHotelbyId, deleteHotelById } from '../controllers/hotel.js';
-import {  verifyToken,verifyAdmin } from '../utils/verify.js';
-const router = express.Router();
+const express = require('express');
+const router= express.Router();
+const Hotel= require(`../models/hotel`);
 
+router.post('/hotel',async(req,res,next)=>{
+    let newHotel= new Hotel(req.body);
+try{
+    const savedhotel = await newHotel.save();
+    res.status(200).json(savedhotel);
+}catch(err){
+  res.status(500).json(err);
+}
 
-
-//Create
-router.post('/', verifyToken,verifyAdmin,createHotel)
-
-//Update
-router.put('/:id',verifyToken,verifyAdmin, updateHotel)
-
-//Delete
-
-router.delete('/:id',verifyToken,verifyAdmin, deleteHotelById)
-
-//Get Hotel By id
-router.get('/:id',verifyToken,verifyAdmin, getHotelbyId)
-
-//Get all Hotels
-router.get('/',verifyToken,verifyAdmin, getAllHotels)
-
-
-export default router
+})
