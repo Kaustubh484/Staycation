@@ -1,4 +1,4 @@
-const mongoose= require('mongoose');
+import mongoose from'mongoose';
 const HotelSchema= new mongoose.Schema({
     name:{
      type:String,
@@ -18,7 +18,7 @@ const HotelSchema= new mongoose.Schema({
     },
     distance:{
         type:String,
-        required :true
+       
     },
     photos:{
         type:[String]
@@ -33,4 +33,5 @@ const HotelSchema= new mongoose.Schema({
         type:Number
     }
 })
-module.exports=Hotel=mongoose.model('hotel',HotelSchema);
+const Hotel=mongoose.model('hotel',HotelSchema);
+export default Hotel
