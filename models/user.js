@@ -1,9 +1,10 @@
-const mongoose=require('mongoose');
+import mongoose from'mongoose';
 
 const UserSchema=new mongoose.Schema({
     username:{
         type:String,
-        Required:true
+        Required:true,
+        Unique:true
     },
     email:{
         type:String,
@@ -18,7 +19,16 @@ const UserSchema=new mongoose.Schema({
     salt:{
         type:String
     },
-   
+    isAdmin:{
+        type:Boolean,
+        default:false
+    }
+//     role:{
+//      type:String,
+//      enum: ['admin', 'user','hotel'],
+//      Required:true
+//    }
 });
 
-module.exports=User=mongoose.model('user',UserSchema);
+const User=mongoose.model('user',UserSchema);
+export default User

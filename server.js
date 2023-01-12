@@ -1,48 +1,36 @@
-const express=require('express');
-const {connectDB,connect}=require('./config/db');
-const config = require('config');
-const session = require('express-session');
-const MongoStore = require('connect-mongo');
+import express from "express";
+import dotenv from "dotenv";
+import connectDB from'./config/db.js';
+import cookieParser from'cookie-parser';
 const app=express();
 
+dotenv.config()
 //connect database 
 connectDB();
 
 // Init MiddleWare
+
 app.use(express.json({ extended : false}))
-app.get('/',(req,res)=>res.send('API Running'));
+app.use(cookieParser())
 
 //Auth modules
-const crypto= require('crypto');
-const authRoutes= require(`./routes/authRoutes`);
-// const sessionStore= new MongoStore({
-//     mongooseConnection:connect,
-//     collection:'sessions'
-// })
-
-app.use(session({
-    secret: 'kaustubhssecret',
-    resave: false,
-    saveUninitialized: false,
-    store:new MongoStore({
-        mongoUrl:config.get('mongoURI'),
-    }),
-    cookie:{
-    maxAge:60*60*24*1000
-    }
-}))
-
-
-
- const passport=require(`./config/passport`);
-
-app.use(passport.initialize());
-app.use(passport.session());
-
+import crypto from'crypto';
+import authRoutes from'./routes/authRoutes.js';
+import userRoutes from'./routes/user.js';
+import hotelRoutes from'./routes/hotel.js';
 // Define Routes
-app.use(authRoutes);
-
-
-const PORT=process.env.PORT || 5000;
+app.use("/api/auth",authRoutes);
+app.use("/api/user",userRoutes);
+app.use("/api/hotel",hotelRoutes);
+app.use((err,req,res,next)=>{
+    const errorStatus= err.status||500;
+    const errorMessage= err.message||"An error occured"
+    return res.status(errorStatus).json({
+        status:errorStatus,
+        message:errorMessage,
+        stack:err.stack
+    })
+})
+const PORT=5000;
 
 app.listen(PORT,()=> console.log(`Server started on port ${PORT}`));
